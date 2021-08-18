@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="F:/table tennis overview/tnnsProj/tnnsDB.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="2384"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,7:mainmatches"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="matches" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="40"/><column index="2" value="71"/><column index="3" value="59"/><column index="4" value="96"/><column index="5" value="84"/><column index="6" value="86"/><column index="7" value="86"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="selectAllMaxScoreGames.sql">select (select p.login from players as p where p.id = m.winner_id) as winner,
+	   (select p.login from players as p where p.id = m.loser_id) as loser,
+		max(m.winner_score) winner_score,
+		m.loser_score,
+		date(m.match_date) as match_date
+		from matches as m</sql><sql name="selectAllPairsWithWinsStat.sql">select (select p.login from players as p where p.id = m.winner_id)
+		|| '-' ||
+	   (select p.login from players as p where p.id = m.loser_id) as pair,
+	   (select count(m.winner_score) from matches as ms where m.winner_id = ms.winner_id) wins
+		from matches as m
+		group by pair
+		ORDER by wins desc</sql><sql name="selectAllStatsOfPlayers.sql">select p.login,
+	   ( Select count(m.id)
+			from matches as m
+			where p.id = m.winner_id or p.id = m.loser_id)
+			plays,
+		( Select count(m.id)
+			from matches as m
+			where p.id = m.winner_id)
+			wins,
+		( Select count(m.id)
+			from matches as m
+			where p.id = m.loser_id)
+			loses
+from players as p
+order by plays desc
+</sql><sql name="selectAllZeroGames.sql">select (select p.login from players as p where p.id = m.winner_id) as winner,
+	   (select p.login from players as p where p.id = m.loser_id) as loser,
+		m.winner_score,
+		m.loser_score
+		from matches as m
+		where m.loser_score = 0</sql><sql name="selectAllMaxScoreGames.sql">select (select p.login from players as p where p.id = m.winner_id) as winner,
+	   (select p.login from players as p where p.id = m.loser_id) as loser,
+		max(m.winner_score) winner_score,
+		m.loser_score,
+		date(m.match_date) as match_date
+		from matches as m</sql><current_tab id="1"/></tab_sql></sqlb_project>
