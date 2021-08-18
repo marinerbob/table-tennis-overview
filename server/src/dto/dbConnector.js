@@ -116,13 +116,7 @@ class DBConnector {
                     throw err;
                 }
 
-                const { csvFile, newStat } = this._groupUniquePairs(rows);
-
-                fs.writeFile(`weeklyForWord.csv`, csvFile, 'utf8', (err) => {
-                    if (err) {
-                        console.error(err);
-                    }
-                });
+                const { newStat } = this._groupUniquePairs(rows);
 
                 resolve(newStat);
             });
@@ -139,13 +133,7 @@ class DBConnector {
                     throw err;
                 }
 
-                const { csvFile, newStat } = this._groupUniquePairs(rows);
-
-                fs.writeFile(`forWord.csv`, csvFile, 'utf8', (err) => {
-                    if (err) {
-                        console.error(err);
-                    }
-                });
+                const { newStat } = this._groupUniquePairs(rows);
 
                 resolve(newStat);
             });

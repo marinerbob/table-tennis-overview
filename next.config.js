@@ -8,6 +8,7 @@ module.exports = {
         ...config.resolve.alias,
         components: path.resolve(__dirname, 'components'),
         reduxConfig: path.resolve(__dirname, 'reduxConfig'),
+        server: path.resolve(__dirname, 'server'),
         styles: path.resolve(__dirname, 'styles'),
         utils: path.resolve(__dirname, 'utils')
     };
