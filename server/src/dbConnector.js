@@ -1,6 +1,5 @@
 const sqlite3 = require('sqlite3').verbose();
 const proceduresSchema = require('./proceduresSchema');
-const fs = require('fs');
 
 class DBConnector {
     constructor(path) {

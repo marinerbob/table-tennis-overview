@@ -1,7 +1,29 @@
-import { Container } from "@material-ui/core";
+import { useState, useEffect } from 'react';
+
+import axios from 'axios';
+
+import { Container, Grid, Paper } from "@material-ui/core";
+import { DataGrid } from '@material-ui/data-grid';
+
 import Head from "next/head";
 
+const columns = [
+  { field: 'id', headerName: 'ID', flex: 0.3 },
+  { field: 'login', headerName: 'Логин', flex: 0.7  }
+]
+
 export default function Home() {
+  let [isLoading, setLoading] = useState(true);
+  let [data, setData] = useState([]);
+
+  useEffect(() => {
+    axios.get('http://localhost:3000/api/players').then(res => {
+      setData(res.data);
+      setLoading(false);
+    });
+  },
+  []);
+
   return (
     <div>
       <Head>
@@ -11,7 +33,42 @@ export default function Home() {
       </Head>
 
       <Container maxWidth="lg">
-        <h1>Статистика по настольному теннису</h1>
+        <h1>Статистика</h1>
+        <Grid container spacing={3}>
+          <Grid item lg={6}>
+            <Paper className="panel-item">
+              <h2>Игроки</h2>
+              <DataGrid  
+                pageSize={5}
+                rowsPerPageOptions={[5, 10]}
+                autoHeight 
+                columns={columns}
+                rows={data}
+                loading={isLoading}
+              />
+            </Paper>
+          </Grid>
+          <Grid item lg={6}>
+            <Paper className="panel-item">
+              <h2>2</h2>
+            </Paper>
+          </Grid>
+          <Grid item lg={6}>
+            <Paper className="panel-item">
+              <h2>3</h2>
+            </Paper>
+          </Grid>
+          <Grid item lg={6}>
+            <Paper className="panel-item">
+              <h2>4</h2>
+            </Paper>
+          </Grid>
+          <Grid item lg={12}>
+            <Paper className="panel-item">
+              <h2>5</h2>
+            </Paper>
+          </Grid>
+        </Grid>
       </Container>
     </div>
   );
