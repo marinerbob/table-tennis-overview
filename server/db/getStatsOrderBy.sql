@@ -1,1 +1,0 @@
-select * from stats order by plays desc

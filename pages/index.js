@@ -34,13 +34,12 @@ export default function Home() {
 
       <Container maxWidth="lg">
         <h1>Статистика</h1>
-        <Grid container spacing={3}>
-          <Grid item lg={6}>
+        <Grid className="main-grid" container spacing={3}>
+          <Grid className="main-grid__item" item lg={6}>
             <Paper className="panel-item">
               <h2>Игроки</h2>
               <DataGrid  
                 pageSize={5}
-                rowsPerPageOptions={[5, 10]}
                 autoHeight 
                 columns={columns}
                 rows={data}

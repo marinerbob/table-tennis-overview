@@ -1,1 +1,0 @@
-select * from weekly_stats order by winrate desc
