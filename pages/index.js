@@ -1,28 +1,27 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
-import axios from 'axios';
+import axios from "axios";
 
 import { Container, Grid, Paper } from "@material-ui/core";
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid } from "@material-ui/data-grid";
 
 import Head from "next/head";
 
 const columns = [
-  { field: 'id', headerName: 'ID', flex: 0.3 },
-  { field: 'login', headerName: 'Логин', flex: 0.7  }
-]
+  { field: "id", headerName: "ID", flex: 0.3 },
+  { field: "login", headerName: "Логин", flex: 0.7 }
+];
 
 export default function Home() {
   let [isLoading, setLoading] = useState(true);
   let [data, setData] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:3000/api/players').then(res => {
+    axios.get("/api/players").then((res) => {
       setData(res.data);
       setLoading(false);
     });
-  },
-  []);
+  }, []);
 
   return (
     <div>
@@ -35,34 +34,34 @@ export default function Home() {
       <Container maxWidth="lg">
         <h1>Статистика</h1>
         <Grid className="main-grid" container spacing={3}>
-          <Grid className="main-grid__item" item lg={6}>
+          <Grid className="main-grid__item" item xs={12} lg={6}>
             <Paper className="panel-item">
               <h2>Игроки</h2>
-              <DataGrid  
+              <DataGrid
                 pageSize={5}
-                autoHeight 
+                autoHeight
                 columns={columns}
                 rows={data}
                 loading={isLoading}
               />
             </Paper>
           </Grid>
-          <Grid item lg={6}>
+          <Grid item xs={12} lg={6}>
             <Paper className="panel-item">
               <h2>2</h2>
             </Paper>
           </Grid>
-          <Grid item lg={6}>
+          <Grid item xs={6}>
             <Paper className="panel-item">
               <h2>3</h2>
             </Paper>
           </Grid>
-          <Grid item lg={6}>
+          <Grid item xs={6}>
             <Paper className="panel-item">
               <h2>4</h2>
             </Paper>
           </Grid>
-          <Grid item lg={12}>
+          <Grid item xs={6}>
             <Paper className="panel-item">
               <h2>5</h2>
             </Paper>
