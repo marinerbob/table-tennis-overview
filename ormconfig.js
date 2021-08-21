@@ -1,6 +1,7 @@
 module.exports = {
-  type: "sqlite",
-  filename: "./server/db/tnnsDB.db",
+  type: 'sqlite',
+  database: './server/db/tnnsDB.db',
+  filename: './server/db/tnnsDB.db',
   sychronize: false,
-  entities: ["./server/src/entities/*.js"]
+  entities: ['./server/src/entities/*.js']
 };
