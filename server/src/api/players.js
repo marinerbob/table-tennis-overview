@@ -1,11 +1,12 @@
-// import container from 'server/src/serverDIContainer';
+import container from 'server/src/serverDIContainer';
 
-// REBUILD WITH KNEX NEXT TIME
+//import playerSchema from 'server/src/schemas/player.js';
+//import matchSchema from 'server/src/schemas/match.js';
 
-// export const getAllPlayers = async () => {
-//   let connector = container.resolve('typeORMConnector');
+export const getAllPlayers = async () => {
+  let db = container.resolve('knexDBConnector').db;
 
-//   let playerRepo = await connector.getPlayersRepository();
+  let result = await db('players').select('id', 'login').orderBy('id');
 
-//   return await playerRepo.allPlayers();
-// };
+  return result;
+};
