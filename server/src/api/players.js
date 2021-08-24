@@ -4,9 +4,19 @@ import container from 'server/src/serverDIContainer';
 //import matchSchema from 'server/src/schemas/match.js';
 
 export const getAllPlayers = async () => {
-  let db = container.resolve('knexDBConnector').db;
+  let playersController = container.resolve('playersController');
 
-  let result = await db('players').select('id', 'login').orderBy('id');
+  let result = await playersController.getAllPlayers();
 
   return result;
 };
+
+export const getAllPlayersStat = async () => {
+  let playersController = container.resolve('playersController');
+
+  let result = await playersController.getAllStatsForPlayers();
+
+  return result;
+};
+
+
