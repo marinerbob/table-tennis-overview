@@ -1,11 +1,9 @@
-import dbConn from "server/src";
+import { getAllPlayers } from 'server/src/api/players';
 
 export default function handler(req, res) {
-  dbConn
-    .getAllPlayers()
+  getAllPlayers()
     .then((data) => {
       res.send(JSON.stringify(data));
-      dbConn.closeDBConnection();
     })
     .catch((err) => console.error(err));
-};
+}

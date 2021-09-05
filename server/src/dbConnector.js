@@ -1,144 +1,140 @@
-const sqlite3 = require('sqlite3').verbose();
-const proceduresSchema = require('./proceduresSchema');
+const sqlite3 = require("sqlite3").verbose();
+const proceduresSchema = require("./proceduresSchema");
 
 class DBConnector {
-    constructor(path) {
-        this.DB_PATH = path;
-        this.dbObj;
-    }
+  constructor(path) {
+    this.DB_PATH = path;
+  }
 
-    openDBConnection () {
-        const { DB_PATH } = this;
-        let db = new sqlite3.Database(DB_PATH, sqlite3.OPEN_READWRITE, err => {
-            if (err) {
-                return console.error(err.message);
-            }
-        
-            console.log(`Connected to the DB located in ${DB_PATH}`)
-        });
+  openDBConnection() {
+    const { DB_PATH } = this;
+    let db = new sqlite3.Database(DB_PATH, sqlite3.OPEN_READWRITE, (err) => {
+      if (err) {
+        return console.error(err.message);
+      }
 
-        this.dbObj = db;
+      console.log(`Connected to the DB located in ${DB_PATH}`);
+    });
 
-        return db;
-    }
+    this.dbObj = db;
 
-    closeDBConnection () {
-        const { DB_PATH, dbObj } = this;
+    return db;
+  }
 
-        return dbObj.close(err => {
-            if (err) {
-                return console.error(err.message);
-            }
-        
-            console.log(`The DB connection located in ${DB_PATH} closed`);
-        })
-    }
+  closeDBConnection() {
+    const { DB_PATH, dbObj } = this;
 
-    getAllPlayers () {
-        const db = this.openDBConnection();
-        const { getAllPlayers } = proceduresSchema;
+    return dbObj.close((err) => {
+      if (err) {
+        return console.error(err.message);
+      }
 
-        return new Promise(resolve => {
-            db.all(getAllPlayers(), [], (err, rows) => {
-                if (err) {
-                    throw err;
-                }
+      console.log(`The DB connection located in ${DB_PATH} closed`);
+    });
+  }
 
-                resolve([...rows]);
-            });
-        })
-    }
+  getAllPlayers() {
+    const db = this.openDBConnection();
+    const { getAllPlayers } = proceduresSchema;
 
-    _groupUniquePairs (rows) {
-        let data = [...rows];
-        let stat = {};
-        let newStat = {};
+    return new Promise((resolve) => {
+      db.all(getAllPlayers(), [], (err, rows) => {
+        if (err) {
+          throw err;
+        }
 
-        data.forEach(el => {
-            stat[el.pair] = {
-                pair: el.pair,
-                wins: el.wins
-            };
-        });
+        resolve([...rows]);
+      });
+    });
+  }
 
+  _groupUniquePairs(rows) {
+    let data = [...rows];
+    let stat = {};
+    let newStat = {};
 
-        Object.keys(stat).forEach(pair => {
-            if (!newStat[pair]) {
-                let reversedPair = pair.split('-').reverse().join('-');
-                let wins = stat[pair] && stat[pair].wins || 0;
-                let loses = stat[reversedPair] && stat[reversedPair].wins || 0;
-                let plays = wins + loses;
-                let winrate1st = plays && Math.round((wins / plays) * 100)|| 0;
-                let winrate2nd = plays && Math.round((loses / plays) * 100) || 0;
+    data.forEach((el) => {
+      stat[el.pair] = {
+        pair: el.pair,
+        wins: el.wins
+      };
+    });
 
-                newStat[pair] = {
-                    pair,
-                    plays,
-                    wins,
-                    loses,
-                    winrate1st,
-                    winrate2nd
-                };
+    Object.keys(stat).forEach((pair) => {
+      if (!newStat[pair]) {
+        let reversedPair = pair.split("-").reverse().join("-");
+        let wins = (stat[pair] && stat[pair].wins) || 0;
+        let loses = (stat[reversedPair] && stat[reversedPair].wins) || 0;
+        let plays = wins + loses;
+        let winrate1st = (plays && Math.round((wins / plays) * 100)) || 0;
+        let winrate2nd = (plays && Math.round((loses / plays) * 100)) || 0;
 
-                if (!newStat[reversedPair]) {
-                    newStat[reversedPair] = {
-                        pair: reversedPair,
-                        plays,
-                        wins: loses,
-                        loses: wins,
-                        winrate1st: winrate2nd,
-                        winrate2nd: winrate1st
-                    };
-                }
-            }
+        newStat[pair] = {
+          pair,
+          plays,
+          wins,
+          loses,
+          winrate1st,
+          winrate2nd
+        };
 
-        });
+        if (!newStat[reversedPair]) {
+          newStat[reversedPair] = {
+            pair: reversedPair,
+            plays,
+            wins: loses,
+            loses: wins,
+            winrate1st: winrate2nd,
+            winrate2nd: winrate1st
+          };
+        }
+      }
+    });
 
-        let csvFile = `pair;plays;wins;loses;winrate1st;winrate2nd;`;
+    let csvFile = `pair;plays;wins;loses;winrate1st;winrate2nd;`;
 
-        Object.keys(newStat).forEach(key => {
-            let o = newStat[key];
+    Object.keys(newStat).forEach((key) => {
+      let o = newStat[key];
 
-            csvFile+=`\n${o.pair};${o.plays};${o.wins};${o.loses};${o.winrate1st};${o.winrate2nd};`;
-        });
+      csvFile += `\n${o.pair};${o.plays};${o.wins};${o.loses};${o.winrate1st};${o.winrate2nd};`;
+    });
 
-        return { csvFile, newStat };
-    }
+    return { csvFile, newStat };
+  }
 
-    getWeeklyPairsWithWinsStat () {
-        const db = this.openDBConnection();
-        const { getWeeklyPairsWithWinsStat } = proceduresSchema;
+  getWeeklyPairsWithWinsStat() {
+    const db = this.openDBConnection();
+    const { getWeeklyPairsWithWinsStat } = proceduresSchema;
 
-        return new Promise(resolve => {
-            db.all(getWeeklyPairsWithWinsStat(), [], (err, rows) => {
-                if (err) {
-                    throw err;
-                }
+    return new Promise((resolve) => {
+      db.all(getWeeklyPairsWithWinsStat(), [], (err, rows) => {
+        if (err) {
+          throw err;
+        }
 
-                const { newStat } = this._groupUniquePairs(rows);
+        const { newStat } = this._groupUniquePairs(rows);
 
-                resolve(newStat);
-            });
-        })
-    }
+        resolve(newStat);
+      });
+    });
+  }
 
-    getAllPairsWithWinsStat () {
-        const db = this.openDBConnection();
-        const { getAllPairsWithWinsStat } = proceduresSchema;
+  getAllPairsWithWinsStat() {
+    const db = this.openDBConnection();
+    const { getAllPairsWithWinsStat } = proceduresSchema;
 
-        return new Promise(resolve => {
-            db.all(getAllPairsWithWinsStat(), [], (err, rows) => {
-                if (err) {
-                    throw err;
-                }
+    return new Promise((resolve) => {
+      db.all(getAllPairsWithWinsStat(), [], (err, rows) => {
+        if (err) {
+          throw err;
+        }
 
-                const { newStat } = this._groupUniquePairs(rows);
+        const { newStat } = this._groupUniquePairs(rows);
 
-                resolve(newStat);
-            });
-        })
-    }
-
+        resolve(newStat);
+      });
+    });
+  }
 }
 
 module.exports = DBConnector;
